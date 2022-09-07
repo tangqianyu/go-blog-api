@@ -23,8 +23,8 @@ func (p PostService) Save(post models.Post) error {
 }
 
 //FindAll -> calls post repo find all method
-func (p PostService) FindAll(post models.Post, keyword string) (*[]models.Post, int64, error) {
-	return p.repository.FindAll(post, keyword)
+func (p PostService) FindAll(post models.Post) (*[]models.Post, int64, error) {
+	return p.repository.FindAll(post)
 }
 
 // Update -> calls postrepo update method

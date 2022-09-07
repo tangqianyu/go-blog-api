@@ -23,18 +23,11 @@ func (p PostRepository) Save(post models.Post) error {
 }
 
 //FindAll -> Method for fetching all posts from database
-func (p PostRepository) FindAll(post models.Post, keyword string) (*[]models.Post, int64, error) {
+func (p PostRepository) FindAll(post models.Post) (*[]models.Post, int64, error) {
 	var posts []models.Post
 	var totalRows int64 = 0
 
-	queryBuider := p.db.DB.Order("created_at desc").Model(&models.Post{})
-
-	// Search parameter
-	if keyword != "" {
-		queryKeyword := "%" + keyword + "%"
-		queryBuider = queryBuider.Where(
-			p.db.DB.Where("post.title LIKE ? ", queryKeyword))
-	}
+	queryBuider := p.db.DB.Order("created_at desc").Model(&models.Post{}).Preload("Book")
 
 	err := queryBuider.
 		Where(post).

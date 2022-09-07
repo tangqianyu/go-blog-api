@@ -24,6 +24,12 @@ func main() {
 	postRoute := routes.NewPostRoute(postController, router)
 	postRoute.Setup()
 
+	bookRepository := repository.NewBookRepository(db)
+	bookService := service.NewBookService(bookRepository)
+	bookController := controller.NewBookController(bookService)
+	bookRoute := routes.NewBookRoute(bookController, router)
+	bookRoute.Setup()
+
 	userRepository := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepository)
 	userController := controller.NewUserController(userService)

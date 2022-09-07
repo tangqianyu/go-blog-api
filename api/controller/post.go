@@ -26,9 +26,7 @@ func NewPostController(s service.PostService) PostController {
 func (p PostController) GetPosts(ctx *gin.Context) {
 	var posts models.Post
 
-	keyword := ctx.Query("keyword")
-
-	data, total, err := p.service.FindAll(posts, keyword)
+	data, total, err := p.service.FindAll(posts)
 
 	if err != nil {
 		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to find questions")

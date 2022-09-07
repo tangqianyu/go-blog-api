@@ -1,5 +1,7 @@
 FROM golang:alpine
 
+ENV TZ=Asia/Shanghai
+
 RUN mkdir /app
 
 WORKDIR /app
