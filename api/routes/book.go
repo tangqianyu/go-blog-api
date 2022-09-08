@@ -3,6 +3,7 @@ package routes
 import (
 	"blog/api/controller"
 	"blog/infrastructure"
+	"blog/middleware/jwt"
 )
 
 //BookRoute BookRoute -> Route for question module
@@ -26,6 +27,7 @@ func NewBookRoute(
 //Setup -> setups new choice Routes
 func (b BookRoute) Setup() {
 	book := b.Handler.Gin.Group("/books")
+	book.Use(jwt.JwtAuthMiddleware())
 	{
 		book.GET("/", b.Controller.GetBooks)
 		book.POST("/", b.Controller.AddBook)

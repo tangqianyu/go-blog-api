@@ -3,6 +3,7 @@ package routes
 import (
 	"blog/api/controller"
 	"blog/infrastructure"
+	"blog/middleware/jwt"
 )
 
 //PostRoute -> Route for question module
@@ -26,6 +27,7 @@ func NewPostRoute(
 //Setup -> setups new choice Routes
 func (p PostRoute) Setup() {
 	post := p.Handler.Gin.Group("/posts")
+	post.Use(jwt.JwtAuthMiddleware())
 	{
 		post.GET("/", p.Controller.GetPosts)
 		post.POST("/", p.Controller.AddPost)

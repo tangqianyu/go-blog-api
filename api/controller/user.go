@@ -4,11 +4,9 @@ import (
 	"blog/api/service"
 	"blog/models"
 	"blog/util"
-	"net/http"
-	"time"
-
+	"blog/util/token"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
+	"net/http"
 )
 
 //UserController struct
@@ -46,7 +44,7 @@ func (u *UserController) CreateUser(c *gin.Context) {
 //LoginUser : Generates JWT Token for validated user
 func (u *UserController) LoginUser(c *gin.Context) {
 	var user models.UserLogin
-	var hmacSampleSecret []byte
+
 	if err := c.ShouldBindJSON(&user); err != nil {
 		util.ErrorJSON(c, http.StatusBadRequest, "Inavlid Json Provided")
 		return
@@ -56,12 +54,9 @@ func (u *UserController) LoginUser(c *gin.Context) {
 		util.ErrorJSON(c, http.StatusBadRequest, "Invalid Login Credentials")
 		return
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user": dbUser,
-		"exp":  time.Now().Add(time.Minute * 15).Unix(),
-	})
 
-	tokenString, err := token.SignedString(hmacSampleSecret)
+	token, err := token.GenerateToken(dbUser.ID)
+
 	if err != nil {
 		util.ErrorJSON(c, http.StatusBadRequest, "Failed to get token")
 		return
@@ -69,7 +64,7 @@ func (u *UserController) LoginUser(c *gin.Context) {
 	response := &util.Response{
 		Success: true,
 		Message: "Token generated sucessfully",
-		Data:    tokenString,
+		Data:    token,
 	}
 	c.JSON(http.StatusOK, response)
 }
